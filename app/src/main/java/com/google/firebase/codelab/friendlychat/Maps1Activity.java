@@ -37,8 +37,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.opencsv.CSVReader;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -97,6 +100,24 @@ public class Maps1Activity extends AppCompatActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
+                String next[] = {};
+                List<String[]> list = new ArrayList<String[]>();
+
+                try{
+                    CSVReader reader = new CSVReader(new InputStreamReader(getAssets().open("schools.csv")));
+                    while(true) {
+                        next = reader.readNext();
+                        if(next != null){
+                            list.add(next);
+                        } else{
+                            break;
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String[] schoolid = new String[400];
                 for (noman.googleplaces.Place place : places) {
 
                     LatLng latLng
@@ -111,6 +132,25 @@ public class Maps1Activity extends AppCompatActivity
                     markerOptions.snippet(markerSnippet);
                     Marker item = mGoogleMap.addMarker(markerOptions);
                     previous_marker.add(item);
+
+                    int k=0;
+                    for(int i=1;i<321;i++){
+                        if(list.get(i)==null){
+                            break;
+                        }
+                        else{
+                            double diff1=Double.parseDouble(list.get(i)[3])-place.getLatitude();
+                            double diff2=Double.parseDouble(list.get(i)[4])-place.getLongitude();
+
+                            if(diff1<0.0001 && diff2<0.0001){
+                                schoolid[k++]=list.get(i)[1];
+                            }
+                        }
+                    }
+                    Intent intent3 = new Intent(Maps1Activity.this,menuActivity.class);
+                    intent3.putExtra("schoolid",schoolid);
+                    //startActivity(intent3);
+
 
                 }
 
@@ -135,7 +175,7 @@ public class Maps1Activity extends AppCompatActivity
                 .listener(Maps1Activity.this)
                 .key("AIzaSyCxRNUiardNLKGdpO91SVUVMYbyBkeqPXw")
                 .latlng(location.latitude, location.longitude)//현재 위치
-                .radius(500) //500 미터 내에서 검색
+                .radius(1000) //1000 미터 내에서 검색
                 .type(PlaceType.SCHOOL) //음식점
                 .build()
                 .execute();
@@ -148,6 +188,43 @@ public class Maps1Activity extends AppCompatActivity
 
     List<Marker> previous_marker = null;
 
+
+    //-------------------[순서번호,학교코드,학교이름] 이 저장된 csv파일을 읽어서 arraylist에 저장하는 코드
+    List<String> index = new ArrayList<String>(); //순서 번호 저장
+    List<String> code_list = new ArrayList<String>(); //학교 코드 저장
+    List<String> latitude = new ArrayList<String>(); //위도 저장
+    List<String> longitude = new ArrayList<String>(); //경도 저장
+
+
+    public void parsing_data(String file_name){
+
+        try{
+            CSVReader reader = new CSVReader(new InputStreamReader(getAssets().open(file_name)));
+
+            String [] nextLine; //한줄씩 읽기
+
+            while ((nextLine = reader.readNext()) != null){
+                index.add(nextLine[0]);
+                code_list.add(nextLine[1]);
+                latitude.add(nextLine[3]);
+                longitude.add(nextLine[4]);
+            }
+        }catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+    //---------------------------------------------------------------------------------------
+
+/*
+    private String getschool(){
+        currentPosition = new LatLng(location.getLatitude(),)
+        String id="";
+        parsing_data("schools.csv");
+        String pick_lat = String.valueOf(location.getLa)
+        return id;
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

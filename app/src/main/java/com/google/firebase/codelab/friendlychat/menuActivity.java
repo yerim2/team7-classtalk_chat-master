@@ -140,16 +140,21 @@ public class menuActivity extends AppCompatActivity {
         return lunch;
     }
 
+
     //----------------------api코드를 이용하여 학사일정을 return하는 함수-------------------------------
     private String gettodo() {
         parsing_data("schools.csv");
+
+
+        Intent intent =getIntent();
+        String code = intent.getStringExtra("schoolid");
 
 
         String todolist ="";
         String school_code = "";
         school_code = code_list.get(278); //1번 인덱스 학교의 메뉴를 가져옴
 
-        School api = new School(School.Type.HIGH, School.Region.SEOUL, school_code);
+        School api = new School(School.Type.HIGH, School.Region.SEOUL, code);
         try {
 
             List<SchoolSchedule> schedule = api.getMonthlySchedule(year,month);
