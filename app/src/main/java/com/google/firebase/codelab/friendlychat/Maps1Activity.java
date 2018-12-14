@@ -183,6 +183,25 @@ public class Maps1Activity extends AppCompatActivity
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        Button backButton = (Button) findViewById(R.id.back);
+        backButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                finish();
+            } //뒤로가기 버튼( 채팅방으로 돌아가기)
+        });
+
+        Button menuButton = (Button) findViewById(R.id.menuButton);
+        menuButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Intent intent2 = new Intent(Maps1Activity.this,menuActivity.class);
+                startActivity(intent2);
+            } //메뉴버튼 - 메뉴 창으로 들어가기
+        });
+
 
 
     }

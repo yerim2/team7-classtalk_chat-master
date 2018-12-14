@@ -11,29 +11,23 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyC90uOOcteTiVa6n8L2UKWd5ju1LCuH8QE" />
-
         <meta-data
             android:name="com.google.android.gms.ads.AD_MANAGER_APP"
-            android:value="true"/>
+            android:value="true" />
 
-        <activity android:name="com.google.firebase.codelab.friendlychat.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".Maps1Activity">
-
-        </activity>
-
+        <activity android:name=".Maps1Activity"></activity>
         <activity android:name=".SignInActivity" />
-
+        <activity android:name=".menuActivity"></activity>
     </application>
 
 </manifest>

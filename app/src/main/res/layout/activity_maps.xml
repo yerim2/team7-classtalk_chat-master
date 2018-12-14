@@ -21,5 +21,18 @@
         android:id="@+id/button"/>
 
 
+    <Button
+        android:id="@+id/back"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:text="채팅방 돌아가기" />
+
+    <Button
+    android:id="@+id/menuButton"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="0.2"
+    android:text="급식과 일정" />
 
 </LinearLayout>
