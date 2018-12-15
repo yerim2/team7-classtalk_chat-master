@@ -58,7 +58,7 @@ public class Maps1Activity extends AppCompatActivity
         implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener, PlacesListener {
+        LocationListener {
 
 
     private GoogleApiClient mGoogleApiClient = null;
@@ -84,147 +84,30 @@ public class Maps1Activity extends AppCompatActivity
             .setInterval(UPDATE_INTERVAL_MS)
             .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
 
+    public String schoolid = "";
 
-    @Override
-    public void onPlacesFailure(PlacesException e) {
-
-    }
-
-    @Override
-    public void onPlacesStart() {
-
-    }
-
-    @Override
-    public void onPlacesSuccess(final List<Place> places) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                String next[] = {};
-                List<String[]> list = new ArrayList<String[]>();
-
-                try{
-                    CSVReader reader = new CSVReader(new InputStreamReader(getAssets().open("schools.csv")));
-                    while(true) {
-                        next = reader.readNext();
-                        if(next != null){
-                            list.add(next);
-                        } else{
-                            break;
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                String[] schoolid = new String[400];
-                for (noman.googleplaces.Place place : places) {
-
-                    LatLng latLng
-                            = new LatLng(place.getLatitude()
-                            , place.getLongitude());
-
-                    String markerSnippet = getCurrentAddress(latLng);
-
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.position(latLng);
-                    markerOptions.title(place.getName());
-                    markerOptions.snippet(markerSnippet);
-                    Marker item = mGoogleMap.addMarker(markerOptions);
-                    previous_marker.add(item);
-
-                    int k=0;
-                    for(int i=1;i<321;i++){
-                        if(list.get(i)==null){
-                            break;
-                        }
-                        else{
-                            double diff1=Double.parseDouble(list.get(i)[3])-place.getLatitude();
-                            double diff2=Double.parseDouble(list.get(i)[4])-place.getLongitude();
-
-                            if(diff1<0.0001 && diff2<0.0001){
-                                schoolid[k++]=list.get(i)[1];
-                            }
-                        }
-                    }
-                    Intent intent3 = new Intent(Maps1Activity.this,menuActivity.class);
-                    intent3.putExtra("schoolid",schoolid);
-                    //startActivity(intent3);
-
-
-                }
-
-                //중복 마커 제거
-                HashSet<Marker> hashSet = new HashSet<Marker>();
-                hashSet.addAll(previous_marker);
-                previous_marker.clear();
-                previous_marker.addAll(hashSet);
-
-            }
-        });
-    }
-
-    public void showPlaceInformation(LatLng location)
-    {
-        mGoogleMap.clear();//지도 클리어
-
-        if (previous_marker != null)
-            previous_marker.clear();//지역정보 마커 클리어
-
-        new NRPlaces.Builder()
-                .listener(Maps1Activity.this)
-                .key("AIzaSyCxRNUiardNLKGdpO91SVUVMYbyBkeqPXw")
-                .latlng(location.latitude, location.longitude)//현재 위치
-                .radius(1000) //1000 미터 내에서 검색
-                .type(PlaceType.SCHOOL) //음식점
-                .build()
-                .execute();
-    }
-
-    @Override
-    public void onPlacesFinished() {
-
-    }
-
-    List<Marker> previous_marker = null;
-
-
-    //-------------------[순서번호,학교코드,학교이름] 이 저장된 csv파일을 읽어서 arraylist에 저장하는 코드
-    List<String> index = new ArrayList<String>(); //순서 번호 저장
-    List<String> code_list = new ArrayList<String>(); //학교 코드 저장
-    List<String> latitude = new ArrayList<String>(); //위도 저장
-    List<String> longitude = new ArrayList<String>(); //경도 저장
-
-
-    public void parsing_data(String file_name){
-
-        try{
-            CSVReader reader = new CSVReader(new InputStreamReader(getAssets().open(file_name)));
-
-            String [] nextLine; //한줄씩 읽기
-
-            while ((nextLine = reader.readNext()) != null){
-                index.add(nextLine[0]);
-                code_list.add(nextLine[1]);
-                latitude.add(nextLine[3]);
-                longitude.add(nextLine[4]);
-            }
-        }catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-    //---------------------------------------------------------------------------------------
 
 /*
-    private String getschool(){
-        currentPosition = new LatLng(location.getLatitude(),)
-        String id="";
-        parsing_data("schools.csv");
-        String pick_lat = String.valueOf(location.getLa)
-        return id;
+    @Override
+    public boolean onMarkerClick(Marker marker){
+        //Toast.makeText(this,marker.getTitle() ,Toast.LENGTH_SHORT).show();
+        double a = marker.getPosition().latitude;
+        double b = marker.getPosition().longitude;
+        ToA = String.valueOf(a);
+        ToB = String.valueOf(b); //마커 클릭한 곳의 위도 경도의 double값을 문자열로 바꾸기
+        Toast.makeText(this,ToA ,Toast.LENGTH_SHORT).show();
+
+        //Intent intent2 = new Intent(Maps1Activity.this, menuActivity.class);
+        //intent2.putExtra("A",ToA);
+        //intent2.putExtra("B",ToB); //위도와 경도를 보낸다.
+        //startActivity(intent2);
+
+
+
+        return true;
     }*/
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -235,15 +118,6 @@ public class Maps1Activity extends AppCompatActivity
         setContentView(R.layout.activity_maps);
 
 
-        previous_marker = new ArrayList<Marker>();
-
-        final Button button = (Button)findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPlaceInformation(currentPosition);
-            }
-        });
 
         Log.d(TAG, "onCreate");
         mActivity = this;
@@ -268,19 +142,31 @@ public class Maps1Activity extends AppCompatActivity
                 finish();
             } //뒤로가기 버튼( 채팅방으로 돌아가기)
         });
-
+/*
         Button menuButton = (Button) findViewById(R.id.menuButton);
         menuButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
+
+
+
+
+
                 Intent intent2 = new Intent(Maps1Activity.this,menuActivity.class);
+
                 startActivity(intent2);
+
+
+
+
+
+
+
             } //메뉴버튼 - 메뉴 창으로 들어가기
         });
 
-
-
+*/
     }
 
 
@@ -404,7 +290,112 @@ public class Maps1Activity extends AppCompatActivity
 
             }
         });
+
+        //-------------------------학교위도, 경도, 코드 정보를 저장------------------------------------------------
+
+        List<String> index = new ArrayList<String>(); //순서 번호 저장
+        List<String> code_list = new ArrayList<String>(); //학교 코드 저장
+        List<String> latitude = new ArrayList<String>(); //위도 저장
+        List<String> longitude = new ArrayList<String>(); //경도 저장
+
+
+        try {
+            CSVReader reader = new CSVReader(new InputStreamReader(getAssets().open("schools.csv")));
+
+            String[] nextLine; //한줄씩 읽기
+
+            while ((nextLine = reader.readNext()) != null) {
+                index.add(nextLine[0]);
+                code_list.add(nextLine[1]);
+                latitude.add(nextLine[3]);
+                longitude.add(nextLine[4]);
+                //name_list.add(nextLine[2]);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //------------------------------저장한 위도, 경도 정보로 마커 생성---------------------------------------
+
+        for (int i = 1; i < 321; i++) {
+            LatLng latLng
+                    = new LatLng(Double.parseDouble(latitude.get(i))
+                    , Double.parseDouble(longitude.get(i))); //위도경도를 Double로 바꾸어 위치에 추가
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(latLng);
+            markerOptions.title("메뉴보기");
+            mGoogleMap.addMarker(markerOptions).showInfoWindow();
+
+        }
+
+        /*
+        //-------------------------------마커 클릭 리스너 지정--------------------------------------------
+        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener(){
+            public boolean onMarkerClick(Marker marker){
+
+                double a = marker.getPosition().latitude;
+                double b = marker.getPosition().longitude;
+                ToA = String.valueOf(a);
+                ToB = String.valueOf(b); //마커 클릭한 곳의 위도 경도의 double값을 문자열로 바꾸기
+
+                Intent intent2 = new Intent(getBaseContext(), menuActivity.class);
+                intent2.putExtra("A",ToA);
+                intent2.putExtra("B",ToB); //위도와 경도를 보낸다.
+                startActivity(intent2);
+                return false;
+
+            }
+
+
+        });*/
+
+        mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                String ToA="";
+                String ToB="";
+
+                Intent intent = new Intent(getBaseContext(), menuActivity.class);
+
+                double a = marker.getPosition().latitude;
+                double b = marker.getPosition().longitude;
+                ToA = String.valueOf(a);
+                ToB = String.valueOf(b); //마커 클릭한 곳의 위도 경도의 double값을 문자열로 바꾸기
+
+
+                intent.putExtra("A", ToA);
+                intent.putExtra( "B", ToB);
+
+                startActivity(intent);
+            }
+        });
+
+        /*
+        class MyMarkerClickListener implements GoogleMap.OnMarkerClickListener{
+            public boolean onMarkerClick(Marker marker){
+                Toast.makeText(getApplicationContext(),"학교를 선택하셨습니다",Toast.LENGTH_SHORT).show();
+                double a = marker.getPosition().latitude;
+                double b = marker.getPosition().longitude;
+                ToA = String.valueOf(a);
+                ToB = String.valueOf(b); //마커 클릭한 곳의 위도 경도의 double값을 문자열로 바꾸기
+
+                Intent intent2 = new Intent(getBaseContext(), menuActivity.class);
+                intent2.putExtra("A",ToA);
+                intent2.putExtra("B",ToB); //위도와 경도를 보낸다.
+                startActivity(intent2);
+
+                return false;
+            }
+
+        }*/
+
+
     }
+
+
+
 
 
     @Override
