@@ -142,7 +142,7 @@ public class Maps1Activity extends AppCompatActivity
                 finish();
             } //뒤로가기 버튼( 채팅방으로 돌아가기)
         });
-
+/*
         Button menuButton = (Button) findViewById(R.id.menuButton);
         menuButton.setOnClickListener(new View.OnClickListener(){
 
@@ -166,7 +166,7 @@ public class Maps1Activity extends AppCompatActivity
             } //메뉴버튼 - 메뉴 창으로 들어가기
         });
 
-
+*/
     }
 
 
@@ -324,7 +324,7 @@ public class Maps1Activity extends AppCompatActivity
                     , Double.parseDouble(longitude.get(i))); //위도경도를 Double로 바꾸어 위치에 추가
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(latLng);
-            markerOptions.title("학교");
+            markerOptions.title("메뉴보기");
             mGoogleMap.addMarker(markerOptions).showInfoWindow();
 
         }

@@ -144,7 +144,7 @@ public class menuActivity extends AppCompatActivity {
 
         parsing_data("schools.csv");
 
-        for(int i=1;i<320;i++){
+        for(int i=1;i<100;i++){
             if(A.equals(lat.get(i)) && B.equals(lon.get(i))){
                 code = code_list.get(i);
             }
