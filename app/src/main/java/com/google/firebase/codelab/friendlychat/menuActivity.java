@@ -91,6 +91,8 @@ public class menuActivity extends AppCompatActivity {
     List<String> index = new ArrayList<String>(); //순서 번호 저장
     List<String> code_list = new ArrayList<String>(); //학교 코드 저장
     List<String> name_list = new ArrayList<String>(); //학교 이름 저장
+    List<String> lat = new ArrayList<String>(); //위도 저장
+    List<String> lon = new ArrayList<String>(); //경도 저장
 
     public void parsing_data(String file_name){
 
@@ -103,6 +105,8 @@ public class menuActivity extends AppCompatActivity {
                 index.add(nextLine[0]);
                 code_list.add(nextLine[1]);
                 //name_list.add(nextLine[2]);
+                lat.add(nextLine[3]);
+                lon.add(nextLine[4]);
             }
         }catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -119,8 +123,21 @@ public class menuActivity extends AppCompatActivity {
     int month = today.getMonth()+1;  //월
     int todayDate = today.getDate(); //일
 
+    Intent intent3 =getIntent();
+    String A = intent3.getStringExtra("A");
+    String B = intent3.getStringExtra("B");
+    String code="";
+
+
+
     //------------------------api 코드를 이용하여 점심 메뉴를 return하는 함수-----------------------
     private String getmenu() {
+
+        for(int i=1;i<320;i++){
+            if(A == lat.get(i) && B == lon.get(i)){
+                code = code_list.get(i);
+            }
+        }
         parsing_data("schools.csv");
 
 
@@ -129,10 +146,10 @@ public class menuActivity extends AppCompatActivity {
         String school_code = "";
         school_code = code_list.get(278); //1번 인덱스 학교의 메뉴를 가져옴
 
-        School api = new School(School.Type.HIGH, School.Region.SEOUL, school_code);
+        School api = new School(School.Type.HIGH, School.Region.SEOUL, code);
         try {
             List<SchoolMenu> menu = api.getMonthlyMenu(year, month);
-            lunch = menu.get(todayDate-1).lunch; //lunch에 점심메뉴만 저장
+            lunch = menu.get(todayDate-3).lunch; //lunch에 점심메뉴만 저장
             // 21을 넣으면 22일 메뉴가 뜸(api인덱스 문제)
         } catch (SchoolException e) {
             e.printStackTrace();
@@ -146,8 +163,7 @@ public class menuActivity extends AppCompatActivity {
         parsing_data("schools.csv");
 
 
-        Intent intent =getIntent();
-        String code = intent.getStringExtra("schoolid");
+
 
 
         String todolist ="";
@@ -158,7 +174,7 @@ public class menuActivity extends AppCompatActivity {
         try {
 
             List<SchoolSchedule> schedule = api.getMonthlySchedule(year,month);
-            todolist = schedule.get(todayDate-1).toString();
+            todolist = schedule.get(todayDate-2).toString();
 
 
         } catch (SchoolException e) {
