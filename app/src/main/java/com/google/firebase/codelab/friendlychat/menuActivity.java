@@ -28,6 +28,9 @@ public class menuActivity extends AppCompatActivity {
 
     private TextView menuview; // menu를 위한 텍스트뷰 생성
     private TextView todoview; // 학사일정을 위한 텍스트뷰 생성
+    String A="";
+    String B="";
+    String code="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +43,8 @@ public class menuActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        String menu = getmenu();   //메뉴를 저장할 변수
-        String todo = gettodo();   //학사일정을 저장할 변수
+        String menu=getmenu();   //메뉴를 저장할 변수
+        String todo=gettodo();   //학사일정을 저장할 변수
 
         menuview = (TextView) this.findViewById(R.id.textView);  //메뉴를 출력할 텍스트뷰
         menuview.setText(menu);      //메뉴를 텍스트뷰에 넣기
@@ -74,6 +77,11 @@ public class menuActivity extends AppCompatActivity {
             }
         });
 //-------------------------------------------------------------------
+        Bundle extras = getIntent().getExtras();
+
+        A = extras.getString("A");
+        B = extras.getString("B");
+
 
     } //onCreate끝
 
@@ -123,23 +131,24 @@ public class menuActivity extends AppCompatActivity {
     int month = today.getMonth()+1;  //월
     int todayDate = today.getDate(); //일
 
-    Intent intent3 =getIntent();
-    String A = intent3.getStringExtra("A");
-    String B = intent3.getStringExtra("B");
-    String code="";
+    //Intent intent3 =getIntent();
+    //String A = intent3.getStringExtra("A");
+    //String B = intent3.getStringExtra("B");
+    //String code="";
 
 
 
     //------------------------api 코드를 이용하여 점심 메뉴를 return하는 함수-----------------------
     private String getmenu() {
 
+
+        parsing_data("schools.csv");
+
         for(int i=1;i<320;i++){
-            if(A == lat.get(i) && B == lon.get(i)){
+            if(A.equals(lat.get(i)) && B.equals(lon.get(i))){
                 code = code_list.get(i);
             }
         }
-        parsing_data("schools.csv");
-
 
 
         String lunch = "";

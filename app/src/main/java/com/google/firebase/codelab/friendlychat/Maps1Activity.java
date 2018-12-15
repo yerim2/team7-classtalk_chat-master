@@ -58,7 +58,6 @@ public class Maps1Activity extends AppCompatActivity
         implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMarkerClickListener,
         LocationListener {
 
 
@@ -88,6 +87,25 @@ public class Maps1Activity extends AppCompatActivity
     public String schoolid = "";
 
 
+/*
+    @Override
+    public boolean onMarkerClick(Marker marker){
+        //Toast.makeText(this,marker.getTitle() ,Toast.LENGTH_SHORT).show();
+        double a = marker.getPosition().latitude;
+        double b = marker.getPosition().longitude;
+        ToA = String.valueOf(a);
+        ToB = String.valueOf(b); //마커 클릭한 곳의 위도 경도의 double값을 문자열로 바꾸기
+        Toast.makeText(this,ToA ,Toast.LENGTH_SHORT).show();
+
+        //Intent intent2 = new Intent(Maps1Activity.this, menuActivity.class);
+        //intent2.putExtra("A",ToA);
+        //intent2.putExtra("B",ToB); //위도와 경도를 보낸다.
+        //startActivity(intent2);
+
+
+
+        return true;
+    }*/
 
 
 
@@ -131,11 +149,9 @@ public class Maps1Activity extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
-                Intent intent3 = new Intent(Maps1Activity.this,menuActivity.class);
-                Bundle data1 = new Bundle();
-                data1.putString("schoolid",schoolid);
-                intent3.putExtras(data1);
-                startActivity(intent3);
+
+
+
 
                 Intent intent2 = new Intent(Maps1Activity.this,menuActivity.class);
 
@@ -149,7 +165,6 @@ public class Maps1Activity extends AppCompatActivity
 
             } //메뉴버튼 - 메뉴 창으로 들어가기
         });
-
 
 
     }
@@ -314,28 +329,73 @@ public class Maps1Activity extends AppCompatActivity
 
         }
 
+        /*
         //-------------------------------마커 클릭 리스너 지정--------------------------------------------
-        mGoogleMap.setOnMarkerClickListener(this);
+        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener(){
+            public boolean onMarkerClick(Marker marker){
+
+                double a = marker.getPosition().latitude;
+                double b = marker.getPosition().longitude;
+                ToA = String.valueOf(a);
+                ToB = String.valueOf(b); //마커 클릭한 곳의 위도 경도의 double값을 문자열로 바꾸기
+
+                Intent intent2 = new Intent(getBaseContext(), menuActivity.class);
+                intent2.putExtra("A",ToA);
+                intent2.putExtra("B",ToB); //위도와 경도를 보낸다.
+                startActivity(intent2);
+                return false;
+
+            }
+
+
+        });*/
+
+        mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                String ToA="";
+                String ToB="";
+
+                Intent intent = new Intent(getBaseContext(), menuActivity.class);
+
+                double a = marker.getPosition().latitude;
+                double b = marker.getPosition().longitude;
+                ToA = String.valueOf(a);
+                ToB = String.valueOf(b); //마커 클릭한 곳의 위도 경도의 double값을 문자열로 바꾸기
+
+
+                intent.putExtra("A", ToA);
+                intent.putExtra( "B", ToB);
+
+                startActivity(intent);
+            }
+        });
+
+        /*
+        class MyMarkerClickListener implements GoogleMap.OnMarkerClickListener{
+            public boolean onMarkerClick(Marker marker){
+                Toast.makeText(getApplicationContext(),"학교를 선택하셨습니다",Toast.LENGTH_SHORT).show();
+                double a = marker.getPosition().latitude;
+                double b = marker.getPosition().longitude;
+                ToA = String.valueOf(a);
+                ToB = String.valueOf(b); //마커 클릭한 곳의 위도 경도의 double값을 문자열로 바꾸기
+
+                Intent intent2 = new Intent(getBaseContext(), menuActivity.class);
+                intent2.putExtra("A",ToA);
+                intent2.putExtra("B",ToB); //위도와 경도를 보낸다.
+                startActivity(intent2);
+
+                return false;
+            }
+
+        }*/
+
 
     }
 
-    @Override
-    public boolean onMarkerClick(Marker marker){
-        Toast.makeText(this,marker.getTitle() ,Toast.LENGTH_SHORT).show();
-        double a = marker.getPosition().latitude;
-        double b = marker.getPosition().longitude;
-        String ToA = String.valueOf(a);
-        String ToB = String.valueOf(b); //마커 클릭한 곳의 위도 경도의 double값을 문자열로 바꾸기
-
-        Intent intent2 = new Intent(Maps1Activity.this, menuActivity.class);
-        intent2.putExtra("A",ToA);
-        intent2.putExtra("B",ToB); //위도와 경도를 보낸다.
-        startActivity(intent2);
 
 
-
-        return true;
-    }
 
 
     @Override
