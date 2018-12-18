@@ -209,10 +209,10 @@
 1. api 키가 옳은지 확인
 2. 프로젝트의 gradle file에 있는 모든 dependencies의 버전이 각각 호환되는지 확인
 
-? 프로젝트의 gradle version = 4.4, Android Plugin Version 3.1.2
+ > 프로젝트의 gradle version = 4.4, Android Plugin Version 3.1.2
 
 
- ### 4. 라이센스
+ ### 6. 라이센스
  > 이 소프트웨어는 MIT 라이센스를 따라 자유롭게 이용하실 수 있습니다.
  
  
