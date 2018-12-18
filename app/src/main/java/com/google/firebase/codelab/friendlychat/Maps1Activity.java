@@ -279,17 +279,6 @@ public class Maps1Activity extends AppCompatActivity
                     , Double.parseDouble(longitude.get(i))); //위도경도를 Double로 바꾸어 위치에 추가
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(latLng);
-
-
-
-
-
-
-
-
-
-
-
             markerOptions.title("메뉴보기");
             mGoogleMap.addMarker(markerOptions).showInfoWindow();
 
