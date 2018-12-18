@@ -20,13 +20,20 @@
 
 > 2-1. 사용자에게 apk파일을 배부하면 사용자는 이를 설치하여 구글 아이디를 이용하여 로그인한다.
 >
-![screenshot_20181215-171317](https://user-images.githubusercontent.com/24403704/50160379-895c3580-031c-11e9-9e87-b844098bebc3.png)
-
 > 2-2. 로그인 후, 앱에 로그인한 사람들과 채팅을 할 수 있다. 
 >
 > 2-3. 오늘의 일정과 식단을 보고 싶다면, 초기 지도 화면으로 이동한다. 초기 지도 화면에서는 현재 위치를 받아 주변의 학교들을 띄워준다.
 >
 > 2-4. 그 중 한 학교를 선택하면 사용자는 그날의 학사일정과 급식 메뉴를 볼 수 있다.
+
+> 로그인, 채팅 화면
+![default](https://user-images.githubusercontent.com/24403704/50161050-10f67400-031e-11e9-865e-4737d3e2d5ab.PNG)
+
+> 지도 버튼 눌렀을 때
+![2](https://user-images.githubusercontent.com/24403704/50161111-32eff680-031e-11e9-96ec-d090e83c9dc1.PNG)
+
+> 급식확인 버튼 눌렀을 때
+![3](https://user-images.githubusercontent.com/24403704/50161126-3d11f500-031e-11e9-95e5-23c22f3a754e.PNG)
 
 
 ### 3. 주요 기능 및 관련 API
