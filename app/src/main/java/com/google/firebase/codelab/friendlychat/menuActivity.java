@@ -32,8 +32,8 @@ public class menuActivity extends AppCompatActivity {
     String A="";
     String B="";
     String code="";
-    String menu="";
-    String schedule="";
+    //String menu="";
+    //String schedule="";
 
 
     //오늘의 년,월,일을 저장
@@ -53,7 +53,7 @@ public class menuActivity extends AppCompatActivity {
 
         parsing_data("schools.csv");
 
-        for(int i=1;i<320;i++){
+        for(int i=1;i<300;i++){
             if(A.equals(lat.get(i)) && B.equals(lon.get(i))){
                 code = code_list.get(i);
             }
@@ -64,7 +64,8 @@ public class menuActivity extends AppCompatActivity {
 
         menuview = (TextView) this.findViewById(R.id.textView);  //메뉴를 출력할 텍스트뷰
         todoview = (TextView) this.findViewById(R.id.textView2);  //학사일정를 출력할 텍스트뷰
-        id = (TextView) this.findViewById(R.id.textView5);
+        id = (TextView) this.findViewById(R.id.textView6); //학교 아이디 출력
+        id.setText(code);//학교 고유 아이디를 출력함(확인용)
 
 
         //-------------------오류시 추가-----------------------------------------------------------
@@ -79,12 +80,12 @@ public class menuActivity extends AppCompatActivity {
         Thread thread= new Thread(new Runnable() {
             @Override
             public void run() {
-                menu = getmenu(code); //getmenu함수를 실행시켜 리턴된 점심메뉴를 menu에 저장
-                schedule= gettodo(code); //gettodo함수를 실행시켜 리턴된 학사일정을 todo에 저장
+                String menu = getmenu(); //getmenu함수를 실행시켜 리턴된 점심메뉴를 menu에 저장
+                String schedule= gettodo(); //gettodo함수를 실행시켜 리턴된 학사일정을 todo에 저장
 
                 Bundle bun = new Bundle();
-                bun.putString("HTML_DATA", menu);
-                bun.putString("HTML_DATA", schedule);
+                bun.putString("HTML_DATA1", menu);
+                bun.putString("HTML_DATA2", schedule);
 
                 Message msg = handler.obtainMessage();
                 msg.setData(bun);
@@ -111,10 +112,11 @@ public class menuActivity extends AppCompatActivity {
         public void handleMassage(Message msg) {
             super.handleMessage(msg);
             Bundle bun = msg.getData();
-            String menu = bun.getString("HTML_DATA");
-            String schedule = bun.getString("HTML_DATA");
+            String menu = bun.getString("HTML_DATA1");
+            String schedule = bun.getString("HTML_DATA2");
             menuview.setText(menu);
             todoview.setText(schedule);
+
 
         }
     };
@@ -153,12 +155,12 @@ public class menuActivity extends AppCompatActivity {
 
 
     //------------------------api 코드를 이용하여 점심 메뉴를 return하는 함수-----------------------
-    private String getmenu(String code) {
+    private String getmenu() {
         String lunch = "";
         School api = new School(School.Type.HIGH, School.Region.SEOUL, code);
         try {
             List<SchoolMenu> menu = api.getMonthlyMenu(2018, 12);
-            lunch = menu.get(18).lunch; //lunch에 점심메뉴만 저장
+            lunch = menu.get(3).lunch; //lunch에 점심메뉴만 저장
             // 21을 넣으면 22일 메뉴가 뜸(api인덱스 문제)
         } catch (SchoolException e) {
             e.printStackTrace();
@@ -168,7 +170,7 @@ public class menuActivity extends AppCompatActivity {
 
 
     //----------------------api코드를 이용하여 학사일정을 return하는 함수-------------------------------
-    private String gettodo(String code) {
+    private String gettodo() {
         String todolist ="";
         School api = new School(School.Type.HIGH, School.Region.SEOUL, code);
         try {
@@ -180,8 +182,6 @@ public class menuActivity extends AppCompatActivity {
         }
         return todolist ;
     }
-
-
     //----------------------------------------------------------------------------------------
 
 
