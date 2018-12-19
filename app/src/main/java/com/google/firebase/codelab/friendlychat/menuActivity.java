@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date; //현재 날짜 불러오기 위함
+import java.util.TreeMap;
 
 public class menuActivity extends AppCompatActivity {
 
@@ -61,11 +62,19 @@ public class menuActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+        //String menu = getmenu();   //메뉴를 저장할 변수
+        //Stringtodo = gettodo();   //학사일정을 저장할 변수
+
+
 
         menuview = (TextView) this.findViewById(R.id.textView);  //메뉴를 출력할 텍스트뷰
         todoview = (TextView) this.findViewById(R.id.textView2);  //학사일정를 출력할 텍스트뷰
         id = (TextView) this.findViewById(R.id.textView6); //학교 아이디 출력
         id.setText(code);//학교 고유 아이디를 출력함(확인용)
+         menuview.setText("메뉴가 없습니다");
+        todoview.setText("일정이 없습니다");
+
+
 
 
         //-------------------오류시 추가-----------------------------------------------------------
@@ -75,23 +84,15 @@ public class menuActivity extends AppCompatActivity {
 
 
 
+        BackThread thread = new BackThread();
+        thread.setDaemon(true);
+        thread.start();
 
-        //------------------네트워크 처리를 위한 쓰레드-------------------------------------------------
-        Thread thread= new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String menu = getmenu(); //getmenu함수를 실행시켜 리턴된 점심메뉴를 menu에 저장
-                String schedule= gettodo(); //gettodo함수를 실행시켜 리턴된 학사일정을 todo에 저장
 
-                Bundle bun = new Bundle();
-                bun.putString("HTML_DATA1", menu);
-                bun.putString("HTML_DATA2", schedule);
+        //new Thread(){
 
-                Message msg = handler.obtainMessage();
-                msg.setData(bun);
-                handler.sendMessage(msg);
-            }
-        });thread.start();
+        //}.start();
+
 
 //-----------------------------------------뒤로가기 버튼---------------
         Button back = (Button) findViewById(R.id.back2);
@@ -107,6 +108,21 @@ public class menuActivity extends AppCompatActivity {
 
     } //onCreate끝
 
+
+    class BackThread extends Thread{
+        public void run() {
+            String menu = getmenu(); //getmenu함수를 실행시켜 리턴된 점심메뉴를 menu에 저장
+            String schedule = gettodo(); //gettodo함수를 실행시켜 리턴된 학사일정을 todo에 저장
+
+            Bundle bun = new Bundle();
+            bun.putString("HTML_DATA1", menu);
+            bun.putString("HTML_DATA2", schedule);
+
+            Message msg = handler.obtainMessage();
+            msg.setData(bun);
+            handler.sendMessage(msg);
+        }
+    }
     //---------------------핸들러에서 getString 실행--------------------------------------------------
     Handler handler = new Handler() {
         public void handleMassage(Message msg) {
@@ -114,6 +130,8 @@ public class menuActivity extends AppCompatActivity {
             Bundle bun = msg.getData();
             String menu = bun.getString("HTML_DATA1");
             String schedule = bun.getString("HTML_DATA2");
+            //menuview.setText("메뉴가 없습니다");
+            //todoview.setText("일정이 없습니다");
             menuview.setText(menu);
             todoview.setText(schedule);
 
